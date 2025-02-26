@@ -1,0 +1,41 @@
+{
+    "appTitle": "Battery Monitor",
+    "charging": "Charging",
+    "discharging": "Discharging",
+    "timeRemaining": "About {hours}h {minutes}m remaining",
+    "timeToFull": "About {minutes} minutes to full charge",
+    "timeToFifty": "{minutes} minutes to 50%",
+    "@timeRemaining": {
+        "placeholders": {
+            "hours": {
+                "type": "int"
+            },
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "@appTitle": {
+        "description": "The title of the application"
+    },
+    "@charging": {
+        "description": "Text shown when battery is charging"
+    },
+    "@discharging": {
+        "description": "Text shown when battery is discharging"
+    },
+    "@timeToFull": {
+        "placeholders": {
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "@timeToFifty": {
+        "placeholders": {
+            "minutes": {
+                "type": "int"
+            }
+        }
+    }
+}

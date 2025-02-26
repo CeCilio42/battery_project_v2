@@ -1,0 +1,6 @@
+{
+    "appTitle": "Batterieüberwachung",
+    "charging": "Wird geladen",
+    "discharging": "Wird entladen",
+    "timeRemaining": "Noch {minutes} Minuten"
+}

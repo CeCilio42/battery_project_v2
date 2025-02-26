@@ -1,0 +1,13 @@
+{
+    "appTitle": "مراقب البطارية",
+    "charging": "جاري الشحن",
+    "discharging": "البطارية المتبقية",
+    "timeRemaining": "متبقي {minutes} دقيقة",
+    "@timeRemaining": {
+        "placeholders": {
+            "minutes": {
+                "type": "int"
+            }
+        }
+    }
+}

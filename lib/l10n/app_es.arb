@@ -1,0 +1,13 @@
+{
+    "appTitle": "Monitor de Batería",
+    "charging": "Cargando",
+    "discharging": "Batería restante",
+    "timeRemaining": "{minutes} minutos restantes",
+    "@timeRemaining": {
+        "placeholders": {
+            "minutes": {
+                "type": "int"
+            }
+        }
+    }
+}
