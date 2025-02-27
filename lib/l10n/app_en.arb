@@ -2,7 +2,7 @@
     "appTitle": "Battery Monitor",
     "charging": "Charging",
     "discharging": "Discharging",
-    "timeRemaining": "About {hours}h {minutes}m remaining",
+    "timeRemaining": "{hours} hours and {minutes} minutes remaining",
     "timeToFull": "About {minutes} minutes to full charge",
     "timeToFifty": "{minutes} minutes to 50%",
     "@timeRemaining": {

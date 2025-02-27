@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:battery_plus/battery_plus.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+import 'language_provider.dart';
 import 'dart:async';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => LanguageProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -13,22 +18,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final lang = Provider.of<LanguageProvider>(context);
+    
     return MaterialApp(
       title: 'Battery Monitor',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en'),
-        Locale('de'),
-      ],
+      // Replace the textDirection with builder
+      builder: (context, child) {
+        return Directionality(
+          textDirection: lang.isRTL ? TextDirection.rtl : TextDirection.ltr,
+          child: child!,
+        );
+      },
       home: const BatteryMonitorPage(),
     );
   }
@@ -120,18 +124,20 @@ class _BatteryMonitorPageState extends State<BatteryMonitorPage> {
   }
 
   String _getTimeEstimate() {
+    final lang = Provider.of<LanguageProvider>(context, listen: false);
+    
     if (_batteryState == BatteryState.charging) {
       if (_batteryLevel < 50) {
-        return '${(25 - (_batteryLevel / 2)).round()} minutes to 50%\n'
-            'About ${70 - _batteryLevel} minutes to full charge';
+        return '${lang.translate('minutesTo50', [(25 - (_batteryLevel / 2)).round()])}\n'
+            '${lang.translate('minutesToFull', [70 - _batteryLevel])}';
       } else {
-        return 'About ${70 - _batteryLevel} minutes to full charge';
+        return lang.translate('minutesToFull', [70 - _batteryLevel]);
       }
     } else if (_batteryState == BatteryState.discharging) {
       double hoursRemaining = (_batteryLevel / 100.0) * (BATTERY_CAPACITY / AVG_DISCHARGE_RATE);
       int hours = hoursRemaining.floor();
       int minutes = ((hoursRemaining - hours) * 60).round();
-      return 'About ${hours}h ${minutes}m remaining';
+      return lang.translate('aboutTimeRemaining', [hours, minutes]);
     }
     return '';
   }
@@ -144,26 +150,32 @@ class _BatteryMonitorPageState extends State<BatteryMonitorPage> {
 
   @override
   Widget build(BuildContext context) {
+    final lang = Provider.of<LanguageProvider>(context);
+    
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.appTitle),
+        title: Text(lang.translate('appTitle')),
         actions: [
-          PopupMenuButton<Locale>(
+          PopupMenuButton<String>(
             icon: const Icon(Icons.language),
-            onSelected: (Locale locale) {
-              // Handle language change
+            onSelected: (String code) {
+              lang.setLanguage(code);
             },
             itemBuilder: (BuildContext context) => [
               const PopupMenuItem(
-                value: Locale('en'),
+                value: 'en',
                 child: Text('English'),
               ),
               const PopupMenuItem(
-                value: Locale('es'),
+                value: 'de',
+                child: Text('Deutsch'),
+              ),
+              const PopupMenuItem(
+                value: 'es',
                 child: Text('Español'),
               ),
               const PopupMenuItem(
-                value: Locale('ar'),
+                value: 'ar',
                 child: Text('العربية'),
               ),
             ],
@@ -212,8 +224,8 @@ class _BatteryMonitorPageState extends State<BatteryMonitorPage> {
             const SizedBox(height: 20),
             Text(
               _batteryState == BatteryState.charging
-                  ? AppLocalizations.of(context)!.charging
-                  : AppLocalizations.of(context)!.discharging,
+                  ? lang.translate('charging')
+                  : lang.translate('discharging'),
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 10),
@@ -223,9 +235,12 @@ class _BatteryMonitorPageState extends State<BatteryMonitorPage> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
-            if (_minutesRemaining != null && _minutesRemaining! > 0)
+            if (_minutesRemaining != null && _minutesRemaining! > 0) 
               Text(
-                AppLocalizations.of(context)!.timeRemaining(_minutesRemaining!),
+                lang.translate('timeRemaining', [
+                  _minutesRemaining! ~/ 60,
+                  _minutesRemaining! % 60,
+                ]),
                 style: Theme.of(context).textTheme.titleMedium,
               ),
           ],
